@@ -248,6 +248,8 @@ class Trainer:
     # Define a method to predict labels for given videos
     def predict(self, model_dir, results_dir, features_path, vid_list_file, epoch, actions_dict, device, sample_rate):
         self.model.eval()
+        # When you're evaluating a model or using it for inference (i.e., making predictions on new data),
+        # you don't need to update the model's parameters. Thus, there's no need to compute gradients. 
         with torch.no_grad():
             self.model.to(device)
             self.model.load_state_dict(torch.load(model_dir + "/epoch-" + str(epoch) + ".model"))
