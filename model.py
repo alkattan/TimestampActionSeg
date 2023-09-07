@@ -34,6 +34,12 @@ class MultiStageModel(nn.Module):
         # For each additional stage, run the output through a single stage model and add that output to the list of all outputs
         for s in self.single_stages:
             middle_out, out = s(F.softmax(out, dim=1) * mask[:, 0:1, :], mask)
+            # Many neural network layers expect the input to have a batch dimension, 
+            # even if the batch size is just 1. By using unsqueeze(0), 
+            # you can add this batch dimension to your single sample, allowing it to be processed 
+            # by the network.
+            # [[1, 2], [3, 4]] -> [[[1, 2], [3, 4]]]
+            # concatenate this sequence on the row/0 axis
             outputs = torch.cat((outputs, out.unsqueeze(0)), dim=0)
 
         # Return the final middle output and the list of all outputs
